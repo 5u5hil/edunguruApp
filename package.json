@@ -1,0 +1,30 @@
+{
+  "name": "EDUNGURU",
+  "version": "1.0.0",
+  "description": "Content Viewing App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Infini Systems",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "window": {
+    "toolbar": true
+  },
+  "dependencies": {
+    "file-encryptor": "^0.1.1",
+    "node-7z": "^0.4.0",
+    "node-cmd": "^3.0.0",
+    "node-macaddress": "^0.2.4",
+    "ps-node": "^0.1.6",
+    "tmp": "0.0.31"
+  },
+  "build": {
+    "win": {
+      "iconUrl": "icon.ico"
+    }
+  }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+    <head>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;  
+                background: url(assets/img/splash.jpg);
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: center;
+            }
+
+            #sb{
+                display: inline-block;
+                position: absolute;
+                margin: 15px;
+                bottom: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+    <body class="animated-content">
+        <script>window.$ = window.jQuery = require('./assets/js/jquery-1.10.2.min.js');</script>
+        <script>
+            $(document).keydown(function (e) {
+                e.preventDefault();
+                alert("Please don't press any keys while the app is on. The appication will quit now.");
+                window.close();
+            });
+
+            var ps = require('ps-node');
+            var encryptor = require('file-encryptor');
+            var fs = require('fs');
+            var path = require('path');
+            var macaddress = require('node-macaddress');
+            var os = require('os');
+            var tmp = os.tmpdir() + "\\edunguruTempData";
+            var cmd = require('node-cmd');
+
+
+            var processes = [];
+            var key = 'My Super Secret Key';
+            var options = {algorithm: 'aes256'};
+            var cpath = './content';
+            var macA;
+            var validity;
+            var javaPath = path.resolve(__dirname + "/../../java/bin");
+            cmd.get(
+                    javaPath + '/java -Xmx1024M TestFileEncryption file.encrypted movie.mp4',
+                    function (err, data, stderr) {
+                      
+                    }
+            );
+
+            macaddress.one(function (err, mac) {
+                macA = mac
+            });
+
+            encryptor.decryptFile(cpath + '/validity.eng', cpath + '/validity.json', key, options, function (err) {
+
+
+                validity = JSON.parse(fs.readFileSync("./content/validity.json", 'utf8'));
+
+                cmd.get(
+                        'wmic diskdrive get PNPDeviceID',
+                        function (err, data, stderr) {
+                            if (data.indexOf(validity.usbNumber) < 0) {
+                                alert("Sorry! You're not authorized to run this Application!");
+                                window.close();
+                            }
+
+                        }
+                );
+
+
+
+                var loadingDate = new Date(validity.loadingDate);
+                var validUpto = new Date(validity.validUpto);
+                var lastAccessedOn = new Date(validity.lastAccessedOn);
+                var today = new Date();
+                validity.lastAccessedOn = today.toISOString().slice(0, 10).replace(/-/g, "-");
+
+                if (validity.devices.length < 3 && validity.devices.indexOf(macA) < 0)
+                    validity.devices.push(macA)
+
+
+                fs.writeFile("./content/validity.json", JSON.stringify(validity), function (err) {
+                    encryptor.encryptFile(cpath + '/validity.json', cpath + '/validity.eng', key, options, function (err) {
+                        fs.unlink('./content/validity.json', function () {});
+                    });
+                });
+                if (loadingDate > today || today > validUpto || today < lastAccessedOn) {
+                    alert("Sorry! The validity of this application is over!");
+                    window.close();
+                }
+
+                if (validity.devices.length = 3 && $.inArray(macA, validity.devices) < 0) {
+                    alert("Sorry! You can use the application only on maximum two computers!");
+                    window.close();
+                }
+
+                window.localStorage.setItem("validity", JSON.stringify(validity));
+            });
+
+
+            encryptor.decryptFile(cpath + '/content.eng', cpath + '/content.json', key, options, function (err) {
+                var content = fs.readFileSync("./content/content.json", 'utf8');
+                window.localStorage.setItem("content", content);
+                fs.unlink('./content/content.json', function () {});
+            });
+
+
+
+            window.localStorage.setItem('tmp', tmp);
+
+
+            if (!fs.existsSync(tmp)) {
+                fs.mkdirSync(tmp);
+            }
+
+
+
+            ps.lookup({}, function (err, resultList) {
+                if (err) {
+                    throw new Error(err);
+                }
+
+                var p = "";
+                resultList.forEach(function (process) {
+                    if (process.command) {
+
+                        processes.push(path.basename(process.command).toLowerCase());
+                    }
+                });
+                processes = processes.filter(function (elem, pos) {
+                    return processes.indexOf(elem) == pos;
+                });
+                var notAllowed = validity.blacklistedApps;
+                var results = processes.filter(function (fs) {
+                    return notAllowed.some(function (ff) {
+                        return fs.indexOf(ff) > -1
+                    });
+                });
+                if (results.length <= 0) {
+                    window.location.href = 'index.html';
+                } else {
+                    alert("Seems like you're running video recording software in the background. Please close the software and restart the application.");
+                    window.close();
+                }
+            });
+
+
+
+
+
+        </script>
+    </body>
+</html>
