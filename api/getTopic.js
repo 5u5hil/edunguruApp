@@ -34,12 +34,11 @@ var video = QueryString.video;
 
 var play = 1;
 
-var encryptor = require('file-encryptor');
 var path = require('path');
 var fs = require('fs');
+var cmd = require('node-cmd');
 
-var key = 'My Super Secret Key';
-var options = {algorithm: 'aes256'};
+var javaPath = path.resolve("./java/bin");
 var path = path.resolve('./content/videos/') + "\\";
 var tmp = window.localStorage.getItem('tmp');
 
@@ -53,7 +52,7 @@ if (fs.existsSync(tmp)) {
 
 fs.readdir(path, function (err, list) {
     list.forEach(function (file) {
-        if (file.indexOf(".mp4") > -1 && file != video.slice(0, -4) + ".mp4")
+        if (file.indexOf(".foo") > -1 && file != video.slice(0, -4) + ".foo")
             fs.unlink(path + file, function () {});
     });
 
@@ -63,11 +62,16 @@ fs.readdir(path, function (err, list) {
 function decrypt() {
     if (play == 1) {
         $("#load").show();
-        encryptor.decryptFile(path + video, cpath + video.slice(0, -4) + ".mp4", key, options, function (err) {
-            //$("video").attr('src', './content/videos/' + video.slice(0, -4) + ".mp4");
-            $("video").attr('src', cpath + video.slice(0, -4) + ".mp4");
-            fullscreen($("video"))
-            $("#load").hide()
+        cmd.get(javaPath + '/java -Xmx1024M dv ' + path + video, function (err, data, stderr) {
+
+            if (stderr == "") {
+                $("video").attr('src', data);
+                fullscreen($("video"));
+                $("#load").hide();
+            } else {
+                alert("Sorry! Something has gone wrong!");
+                window.close();
+            }
         });
         play = 0;
     }
@@ -77,15 +81,14 @@ function decrypt() {
 
 function destroy() {
     play = 1;
-    fs.unlink(cpath + video.slice(0, -4) + ".mp4", function () {});
-
+    cmd.get(javaPath + '/java -Xmx1024M del ' + cpath + video.slice(0, -4), function (err, data, stderr) {
+    });
 }
 
 
 
 function fullscreen(elem) {
     elem = elem || document.documentElement;
-
     if (elem.requestFullscreen) {
         elem.requestFullscreen();
     } else if (elem.msRequestFullscreen) {

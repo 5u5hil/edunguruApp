@@ -1,17 +1,10 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-
-const path = require('path')
-const url = require('url')
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const path = require('path');
+const url = require('url');
 
 
-
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow() {
@@ -37,7 +30,7 @@ function createWindow() {
 
         const fs = require('fs');
         var os = require('os');
-        var tmp = os.tmpdir() + "\\edunguruTempData\\";
+        var tmp = os.tmpdir() + "\\croatoan\\";
 
 
 
@@ -46,7 +39,7 @@ function createWindow() {
         if (fs.existsSync(tmp)) {
 
             fs.readdirSync(tmp).forEach(file => {
-                if (file.indexOf(".mp4") > -1)
+                if (file.indexOf(".foo") > -1)
                     fs.unlink(tmp + file, function () {});
 
             });
@@ -55,7 +48,7 @@ function createWindow() {
         const folder = './content/videos/';
 
         fs.readdirSync(folder).forEach(file => {
-            if (file.indexOf(".mp4") > -1)
+            if (file.indexOf(".foo") > -1)
                 fs.unlink(folder + file, function () {});
 
         });
