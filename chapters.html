@@ -30,7 +30,7 @@
                 font-size: 15px;
             }
         </style>
-<script src="assets/js/loader.js"></script>
+        <script src="assets/js/loader.js"></script>
         <script>window.$ = window.jQuery = require('./assets/js/jquery-1.10.2.min.js');</script>
         <script src="assets/js/jqueryui-1.10.3.min.js"></script> 							
         <script src="assets/js/bootstrap.min.js"></script> 									
@@ -144,7 +144,9 @@
                                                                 </div>
                                                                 <div class="ch-info p15 pt-0 pb-0">
                                                                     <h4 class="fnt-bold marbot-10">{{chapter.title}}     
-                                                                        <a href="topics.html?course={{course}}&chapter={{chapter.title}}&index={{$index}}&courseIndex={{index}}" class="btn btn-default-alt pull-right studybtn-pos">Study</a> 
+                                                                        <a ng-if="chapter.unlockKey == ''" href="topics.html?course={{course}}&chapter={{chapter.title}}&index={{$index}}&courseIndex={{index}}" class="btn btn-default-alt pull-right studybtn-pos">Study</a> 
+                                                                        <a ng-if="chapter.unlockKey != ''" ng-click="unlock($event, chapter.unlockKey, 'topics.html?course=' + course + '&chapter=' + chapter.title + '&index=' + $index + '&courseIndex=' + index,index,$index)" href="#" class="btn btn-default-alt pull-right studybtn-pos">Unlock</a> 
+
                                                                     </h4> 
                                                                     <span class=""><i class="fa fa-play-circle" aria-hidden="true"></i> Topics ({{ chapter.topics.length}})</span>
                                                                 </div>

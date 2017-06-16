@@ -15,6 +15,7 @@
     "toolbar": true
   },
   "dependencies": {
+    "dialogs": "^1.1.19",
     "node-cmd": "^3.0.0",
     "node-macaddress": "^0.2.4",
     "ps-node": "^0.1.6",

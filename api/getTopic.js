@@ -50,13 +50,9 @@ if (fs.existsSync(tmp)) {
 }
 
 
-fs.readdir(path, function (err, list) {
-    list.forEach(function (file) {
-        if (file.indexOf(".foo") > -1 && file != video.slice(0, -4) + ".foo")
-            fs.unlink(path + file, function () {});
-    });
 
-});
+cmd.get(javaPath + '/java -Xmx1024M cln ' + cpath + " " + video.slice(0, -4), function (err, data, stderr) {});
+
 
 
 function decrypt() {
@@ -81,7 +77,7 @@ function decrypt() {
 
 function destroy() {
     play = 1;
-    cmd.get(javaPath + '/java -Xmx1024M del ' + cpath + video.slice(0, -4), function (err, data, stderr) {
+    cmd.get(javaPath + '/java del ' + cpath + video.slice(0, -4), function (err, data, stderr) {
     });
 }
 

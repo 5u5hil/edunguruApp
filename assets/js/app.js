@@ -16,6 +16,7 @@ edu.controller("chapterCtrl", function ($scope, $http) {
 
 
 
+
     $scope.nwDir = "../../content/";
     $scope.course = course;
     $scope.icon = JSON.parse(window.localStorage.getItem('content'))[index]['icon'];
@@ -23,6 +24,55 @@ edu.controller("chapterCtrl", function ($scope, $http) {
     $scope.index = index
     $scope.chapters = JSON.parse(window.localStorage.getItem('content'))[index]['chapters'];
     $scope.validity = validity;
+
+    $scope.unlock = function (event, ukey, url, courseIndex, chapterIndex) {
+
+        var path = require("path");
+        var Dialogs = require('dialogs');
+        var dialogs = Dialogs(opts = {"hostname": "EdunGuru"});
+        var javaPath = path.resolve("./java/bin");
+        var cpath = path.resolve('./content');
+        var fs = require('fs');
+        var path = require('path');
+        var cmd = require('node-cmd');
+
+        dialogs.prompt('Please enter the key to unlock.', '', function (key) {
+            if (key == null || key == "") {
+
+            } else {
+                if (key == ukey) {
+                    jQuery("#load").show();
+
+                    var content = JSON.parse(window.localStorage.getItem('content'));
+                    content[courseIndex]['chapters'][chapterIndex]['unlockKey'] = '';
+                    window.localStorage.setItem('content', JSON.stringify(content));
+
+                    fs.writeFile("./content/content.json", window.localStorage.getItem('content'), function (err) {
+
+                        cmd.get(javaPath + '/java TestFileEncryption ' + cpath + '/content.json ' + cpath + '/content.eng encrypt', function (err, data, stderr) {
+                            if (data.indexOf('success') >= 0) {
+                                cmd.get(javaPath + '/java del ' + cpath + '/content', function (err, data, stderr) {
+                                    window.location.href = url;
+                                });
+                            } else {
+                                alert("Sorry! Something has gone wrong!");
+                                window.close();
+                            }
+                        });
+                    });
+
+
+
+                } else {
+                    alert("Sorry! Invalid Key!");
+                }
+
+            }
+
+        });
+
+
+    }
 
 
 });
@@ -91,9 +141,15 @@ $(document).ready(function () {
     });
 
     $(document).keydown(function (e) {
-        e.preventDefault();
-        alert("Please don't press any keys while the app is on. The App will quit now");
-        window.close();
+
+        if (document.location.pathname.indexOf("chapter") >= 0) {
+
+        } else {
+
+            alert("Please don't press any keys while the app is on. The App will quit now");
+            window.close();
+        }
+
     });
 
 

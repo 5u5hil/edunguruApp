@@ -1311,3 +1311,7 @@ html, body {
         margin-top: 8px;
 
 }
+
+.dialog-widget.prompt input {
+    width: 267px;
+}

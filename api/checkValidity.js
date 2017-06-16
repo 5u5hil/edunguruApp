@@ -11,6 +11,7 @@ var processes = [];
 var macA;
 var validity;
 var javaPath = path.resolve("./java/bin");
+var classPath = path.resolve("./java/lib");
 var cpath = path.resolve('./content');
 
 
@@ -24,9 +25,13 @@ macaddress.one(function (err, mac) {
     macA = mac
 });
 
-cmd.get(javaPath + '/java -Xmx1024M TestFileEncryption ' + cpath + '/validity.eng ' + cpath + '/validity.json decrypt', function (err, data, stderr) {
+
+cmd.get(javaPath + '/java TestFileEncryption ' + cpath + '/validity.eng ' + cpath + '/validity.json decrypt', function (err, data, stderr) {
+
+
 
     if (data.indexOf('success') >= 0) {
+
         validity = JSON.parse(fs.readFileSync("./content/validity.json", 'utf8'));
 
         cmd.get(
@@ -51,9 +56,12 @@ cmd.get(javaPath + '/java -Xmx1024M TestFileEncryption ' + cpath + '/validity.en
 
 
         fs.writeFile("./content/validity.json", JSON.stringify(validity), function (err) {
-            cmd.get(javaPath + '/java -Xmx1024M TestFileEncryption ' + cpath + '/validity.json ' + cpath + '/validity.eng encrypt', function (err, data, stderr) {
+
+            cmd.get(javaPath + '/java TestFileEncryption ' + cpath + '/validity.json ' + cpath + '/validity.eng encrypt', function (err, data, stderr) {
                 if (data.indexOf('success') >= 0) {
-                    fs.unlink('./content/validity.json', function () {});
+                    cmd.get(javaPath + '/java del ' + cpath + '/validity', function (err, data, stderr) {
+
+                    });
                 } else {
                     alert("Sorry! Something has gone wrong!");
                     window.close();
@@ -82,11 +90,48 @@ cmd.get(javaPath + '/java -Xmx1024M TestFileEncryption ' + cpath + '/validity.en
 });
 
 
-cmd.get(javaPath + '/java -Xmx1024M TestFileEncryption ' + cpath + '/content.eng ' + cpath + '/content.json decrypt', function (err, data, stderr) {
-    var content = fs.readFileSync("./content/content.json", 'utf8');
-    window.localStorage.setItem("content", content);
-    fs.unlink('./content/content.json', function () {});
+
+    cmd.get(javaPath + '/java -Xmx500M TestFileEncryption ' + cpath + '/content.eng ' + cpath + '/content.json decrypt', function (err, data, stderr) {
+        var content = fs.readFileSync("./content/content.json", 'utf8');
+        window.localStorage.setItem("content", content);
+
+        cmd.get(javaPath + '/java del ' + cpath + '/content', function (err, data, stderr) { });
+    });
+
+
+ps.lookup({}, function (err, resultList) {
+    if (err) {
+        throw new Error(err);
+    }
+
+    var p = "";
+    resultList.forEach(function (process) {
+        if (process.command) {
+
+            processes.push(path.basename(process.command).toLowerCase());
+        }
+    });
+    processes = processes.filter(function (elem, pos) {
+        return processes.indexOf(elem) == pos;
+    });
+    var notAllowed = JSON.parse(window.localStorage.getItem("validity")).blacklistedApps;
+    var results = processes.filter(function (fs) {
+        return notAllowed.some(function (ff) {
+            return fs.indexOf(ff) > -1
+        });
+    });
+    if (results.length <= 0) {
+        cmd.get(javaPath + '/java del ' + cpath + '/validity', function (err, data, stderr) {
+            window.location.href = 'index.html';
+        });
+
+
+    } else {
+        alert("Seems like you're running video recording software in the background. Please close the software and restart the application.");
+        window.close();
+    }
 });
+
 
 window.localStorage.setItem('tmp', tmp);
 
