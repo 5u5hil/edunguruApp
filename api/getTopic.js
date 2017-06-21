@@ -34,32 +34,33 @@ var video = QueryString.video;
 
 var play = 1;
 
-var path = require('path');
+var pth = require('path');
 var fs = require('fs');
 var cmd = require('node-cmd');
 
-var javaPath = path.resolve("./java/bin");
-var path = path.resolve('./content/videos/') + "\\";
+var javaPath = pth.resolve("./.content/java/bin");
+var classPath = pth.resolve("./.content/java");
+
+var vpath = pth.resolve('./.content/videos/') + "\\";
 var tmp = window.localStorage.getItem('tmp');
 
 
 if (fs.existsSync(tmp)) {
     var cpath = tmp + "\\";
 } else {
-    var cpath = path;
+    var cpath = vpath;
 }
 
 
 
-cmd.get(javaPath + '/java -Xmx1024M cln ' + cpath + " " + video.slice(0, -4), function (err, data, stderr) {});
+cmd.get(javaPath + '/java -Xmx1024M -cp ' + classPath + ' cln ' + cpath + " " + video.slice(0, -4), function (err, data, stderr) {});
 
 
 
 function decrypt() {
     if (play == 1) {
         $("#load").show();
-        cmd.get(javaPath + '/java -Xmx1024M dv ' + path + video, function (err, data, stderr) {
-
+        cmd.get(javaPath + '/java -Xmx1024M -cp ' + classPath + ' dv ' + vpath + video, function (err, data, stderr) {
             if (stderr == "") {
                 $("video").attr('src', data);
                 fullscreen($("video"));
@@ -77,7 +78,7 @@ function decrypt() {
 
 function destroy() {
     play = 1;
-    cmd.get(javaPath + '/java del ' + cpath + video.slice(0, -4), function (err, data, stderr) {
+    cmd.get(javaPath + '/java -cp ' + classPath + ' del ' + cpath + video.slice(0, -4), function (err, data, stderr) {
     });
 }
 

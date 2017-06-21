@@ -1,7 +1,9 @@
 var edu = angular.module("EdunGuru", []);
+var path = require('path');
+var cpath = path.resolve("./.content/") + "\\";
 
 edu.controller("courseCtrl", function ($scope, $http) {
-    $scope.nwDir = "../../content/";
+    $scope.nwDir = cpath;
     $scope.courses = JSON.parse(window.localStorage.getItem('content'));
     $scope.validity = JSON.parse(window.localStorage.getItem('validity'));
 
@@ -17,7 +19,7 @@ edu.controller("chapterCtrl", function ($scope, $http) {
 
 
 
-    $scope.nwDir = "../../content/";
+    $scope.nwDir = cpath;
     $scope.course = course;
     $scope.icon = JSON.parse(window.localStorage.getItem('content'))[index]['icon'];
     ;
@@ -30,13 +32,14 @@ edu.controller("chapterCtrl", function ($scope, $http) {
         var path = require("path");
         var Dialogs = require('dialogs');
         var dialogs = Dialogs(opts = {"hostname": "EdunGuru"});
-        var javaPath = path.resolve("./java/bin");
-        var cpath = path.resolve('./content');
+        var javaPath = path.resolve("./.content/java/bin");
+        var classPath = path.resolve("./.content/java");
+        var cpath = path.resolve('./.content');
         var fs = require('fs');
         var path = require('path');
         var cmd = require('node-cmd');
 
-        dialogs.prompt('Please enter the key to unlock.', '', function (key) {
+        dialogs.prompt('To unlock this chapter, please call our 24x7 support center at 1800 3000 2020 and answer few questions to get the unlocking key.', '', function (key) {
             if (key == null || key == "") {
 
             } else {
@@ -47,9 +50,9 @@ edu.controller("chapterCtrl", function ($scope, $http) {
                     content[courseIndex]['chapters'][chapterIndex]['unlockKey'] = '';
                     window.localStorage.setItem('content', JSON.stringify(content));
 
-                    fs.writeFile("./content/content.json", window.localStorage.getItem('content'), function (err) {
+                    fs.writeFile("./.content/content.json", window.localStorage.getItem('content'), function (err) {
 
-                        cmd.get(javaPath + '/java TestFileEncryption ' + cpath + '/content.json ' + cpath + '/content.eng encrypt', function (err, data, stderr) {
+                        cmd.get(javaPath + '/java -cp '+ classPath +' ed ' + cpath + '/content.json ' + cpath + '/content.eng encrypt', function (err, data, stderr) {
                             if (data.indexOf('success') >= 0) {
                                 cmd.get(javaPath + '/java del ' + cpath + '/content', function (err, data, stderr) {
                                     window.location.href = url;
@@ -86,7 +89,7 @@ edu.controller("topicsCtrl", function ($scope, $http) {
 
 
 
-    $scope.nwDir = "../../content/";
+    $scope.nwDir = cpath;
 
 
     $scope.course = course;
@@ -142,11 +145,8 @@ $(document).ready(function () {
 
     $(document).keydown(function (e) {
 
-        if (document.location.pathname.indexOf("chapter") >= 0) {
-
-        } else {
-
-            alert("Please don't press any keys while the app is on. The App will quit now");
+        if (document.location.pathname.indexOf("topic") >= 0) {
+            alert("Please don't press any keys while the video is playing. The Application will quit now.");
             window.close();
         }
 
@@ -198,7 +198,6 @@ var QueryString = function () {
 
 setInterval(function () {
     checkBackgroundProccesses();
-    console.log("Hello");
 }, 30000);
 
 

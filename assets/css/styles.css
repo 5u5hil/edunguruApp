@@ -1285,9 +1285,6 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
     height: 14px;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
 
 html, body {
     max-width: 100%;

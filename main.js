@@ -45,18 +45,24 @@ function createWindow() {
             });
         }
 
-        const folder = './content/videos/';
+        const folder = './.content/videos/';
 
         fs.readdirSync(folder).forEach(file => {
             if (file.indexOf(".foo") > -1)
                 fs.unlink(folder + file, function () {});
 
         });
+        try {
+            fs.unlink('./.content/content.json', function () {});
+            fs.unlink('./.content/validity.json', function () {});
+        } catch (exception) {
+
+        }
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null
-    })
+    });
 
 
 
