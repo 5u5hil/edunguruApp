@@ -3,3 +3,4 @@
 /.content
 /release-builds
 /node-modules
+*.DS_Store
