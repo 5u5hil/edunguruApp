@@ -52,7 +52,7 @@ edu.controller("chapterCtrl", function ($scope, $http) {
 
                     fs.writeFile("./.content/content.json", window.localStorage.getItem('content'), function (err) {
 
-                        cmd.get(javaPath + '/java -cp '+ classPath +' ed ' + cpath + '/content.json ' + cpath + '/content.eng encrypt', function (err, data, stderr) {
+                        cmd.get(javaPath + '/java -cp ' + classPath + ' ed ' + cpath + '/content.json ' + cpath + '/content.eng encrypt', function (err, data, stderr) {
                             if (data.indexOf('success') >= 0) {
                                 cmd.get(javaPath + '/java del ' + cpath + '/content', function (err, data, stderr) {
                                     window.location.href = url;
@@ -117,8 +117,46 @@ edu.controller("topicCtrl", function ($scope, $http) {
 
 });
 
+edu.controller("noteCtrl", function ($scope, $http) {
+
+    $scope.course = course;
+    $scope.chapter = chapter;
+    $scope.topic = topic;
+    $scope.courseIndex = courseIndex;
+    $scope.chapterIndex = chapterIndex;
+    $scope.topicIndex = topicIndex;
+    $scope.noteIndex = index;
+    $scope.note = note;
+});
+
+edu.controller("notesCtrl", function ($scope, $http) {
 
 
+    $scope.course = QueryString.course;
+    $scope.chapter = QueryString.chapter;
+    $scope.topic = QueryString.topic;
+    $scope.courseIndex = QueryString.courseIndex;
+    $scope.chapterIndex = QueryString.chapterIndex;
+    $scope.index = QueryString.index;
+    $scope.notes = JSON.parse(window.localStorage.getItem('content'))[QueryString.courseIndex]['chapters'][QueryString.courseIndex]['topics'][QueryString.index]['notes'];
+    $("#load").hide();
+});
+
+edu.directive('master', function ($window) {
+    return function (scope, element, attrs) {
+        var w = angular.element($window);
+        scope.$watch(function () {
+            scope.style = {
+                height: element[0].offsetHeight + 'px',
+                width: element[0].offsetWidth + 'px',
+                display: 'block' // this is needed too..
+            };
+        });
+        w.bind('resize', function () {
+            scope.$apply();
+        });
+    };
+})
 $(document).ready(function () {
 
 
@@ -132,29 +170,28 @@ $(document).ready(function () {
 
         }
     });
-
     $("#refresh").click(function (e) {
         e.preventDefault();
         window.location.reload();
     });
-
     $("#back").click(function (e) {
         e.preventDefault();
         window.history.go(-1);
     });
-
+    
     $(document).keydown(function (e) {
 
         if (document.location.pathname.indexOf("topic") >= 0) {
             alert("Please don't press any keys while the video is playing. The Application will quit now.");
             window.close();
         }
+        
+         if (document.location.pathname.indexOf("note") >= 0) {
+            alert("Please don't press any keys while in the note section. The Application will quit now.");
+            window.close();
+        }
 
     });
-
-
-
-
 });
 
 var shell = require('electron').shell;
@@ -164,14 +201,6 @@ $(document).on('click', 'a[href^="http"]', function (event) {
     shell.openExternal(this.href);
 });
 
-
-$(document).keydown(function (e) {
-
-    if (e.keyCode == 37) {
-        alert("windows key pressed");
-        return false;
-    }
-});
 
 var QueryString = function () {
     // This function is anonymous, is executed immediately and 
@@ -200,13 +229,10 @@ setInterval(function () {
     checkBackgroundProccesses();
 }, 30000);
 
-
-
 function checkBackgroundProccesses() {
     var ps = require('ps-node');
     var path = require('path');
     var processes = [];
-
     ps.lookup({}, function (err, resultList) {
         if (err) {
             throw new Error(err);
@@ -235,5 +261,4 @@ function checkBackgroundProccesses() {
             window.close();
         }
     });
-
 }

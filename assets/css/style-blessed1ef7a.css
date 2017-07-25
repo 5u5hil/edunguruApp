@@ -9,7 +9,8 @@
 .img-overlay a {
     position: absolute;
     display: block;
-    background: url(../img/video-bg.png) center center;
+    background: url(../img/video-bg.png) center center no-repeat;
+    background-size: cover;
     height: 100%;
     width: 100%;
     left: 0;

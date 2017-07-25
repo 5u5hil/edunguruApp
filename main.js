@@ -13,6 +13,12 @@ function createWindow() {
     mainWindow.setFullScreen(true);
     mainWindow.once('ready-to-show', () => {
         mainWindow.show()
+        const {session} = require('electron')
+session.defaultSession.on('will-download', (event, item, webContents) => {
+  event.preventDefault()
+ 
+})
+
     })
 
     // and load the index.html of the app.

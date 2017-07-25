@@ -83,6 +83,7 @@
                                 <nav role="navigation" class="widget-body">
                                     <ul class="acc-menu">
                                         <li><a href="index.html"><i class="fa fa-home"></i><span> Home</span></a></li>
+                                        <li id='refresh'><a href="http://www.edunguru.com/account/dashboard"><i class="fa fa-book"></i><span> Take Test</span></a></li>
                                         <li id='refresh'><a href="#"><i class="fa fa-refresh"></i><span> Refresh</span></a></li>
                                         <li id='exit'><a href="#"><i class="fa fa-times"></i><span> Exit</span></a></li>
                                     </ul>
@@ -145,7 +146,7 @@
                                                                 <div class="ch-info p15 pt-0 pb-0">
                                                                     <h4 class="fnt-bold marbot-10">{{chapter.title}}     
                                                                         <a ng-if="chapter.unlockKey == ''" href="topics.html?course={{course}}&chapter={{chapter.title}}&index={{$index}}&courseIndex={{index}}" class="btn btn-default-alt pull-right studybtn-pos">Study</a> 
-                                                                        <a ng-if="chapter.unlockKey != ''" ng-click="unlock($event, chapter.unlockKey, 'topics.html?course=' + course + '&chapter=' + chapter.title + '&index=' + $index + '&courseIndex=' + index,index,$index)" href="#" class="btn btn-default-alt pull-right studybtn-pos">Unlock</a> 
+                                                                        <a ng-if="chapter.unlockKey != ''" ng-click="unlock($event, chapter.unlockKey, 'topics.html?course=' + course + '&chapter=' + chapter.title + '&index=' + $index + '&courseIndex=' + index, index, $index)" href="#" class="btn btn-default-alt pull-right studybtn-pos">Unlock</a> 
 
                                                                     </h4> 
                                                                     <span class=""><i class="fa fa-play-circle" aria-hidden="true"></i> Topics ({{ chapter.topics.length}})</span>

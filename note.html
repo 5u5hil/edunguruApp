@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <!-- Meta Tags -->
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="description" content="Edunguru" />
+        <meta name="keywords" content="academy, course, education, education, elearning, learning, Edunguru" />
+        <meta name="author" content="Infini Systems" />
+
+        <!-- Page Title -->
+        <title>EdunGuru | Content Viewing App</title>
+
+        <link href="assets/img/edu-favicon.png" rel="shortcut icon" type="image/png">
+        <link type='text/css' href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400italic,600' rel='stylesheet'>
+        <link type="text/css" href="assets/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet">       
+        <link type="text/css" href="assets/fonts/themify-icons/themify-icons.css" rel="stylesheet">              
+        <link type="text/css" href="assets/css/styles.css" rel="stylesheet">                                    
+        <link type="text/css" href="assets/plugins/codeprettifier/prettify.css" rel="stylesheet">               
+        <link type="text/css" href="assets/plugins/iCheck/skins/minimal/blue.css" rel="stylesheet">            
+        <link type="text/css" href="assets/plugins/fullcalendar/fullcalendar.css" rel="stylesheet"> 						<!-- FullCalendar -->
+        <link type="text/css" href="assets/plugins/jvectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"> 			<!-- 							<!-- Switchery -->
+        <style>
+            li.toolbar-icon-bg {
+                line-height: 50px;
+                padding: 0px 20px;
+            }
+            span.icon-bg i {
+                font-size: 15px;
+            } 
+            webview {
+                height: 1000px;
+            }
+        </style>
+
+        <script>window.$ = window.jQuery = require('./assets/js/jquery-1.10.2.min.js');</script>
+        <script src="assets/js/jqueryui-1.10.3.min.js"></script> 							
+        <script src="assets/js/bootstrap.min.js"></script> 									
+        <script> window.enquire = require('./assets/js/enquire.min.js');</script>									
+        <script src="assets/plugins/velocityjs/velocity.min.js"></script>					
+        <script src="assets/plugins/velocityjs/velocity.ui.min.js"></script>
+        <script src="assets/plugins/wijets/wijets.js"></script>     						
+        <script src="assets/plugins/codeprettifier/prettify.js"></script> 				
+        <script src="assets/plugins/bootstrap-switch/bootstrap-switch.js"></script> 		
+        <script src="assets/plugins/bootstrap-tabdrop/js/bootstrap-tabdrop.js"></script>  
+        <script src="assets/plugins/iCheck/icheck.min.js"></script>     					
+        <script src="assets/plugins/nanoScroller/js/jquery.nanoscroller.min.js"></script> 
+        <script src="assets/js/application.js"></script>
+
+        <script src="assets/js/angular/angular.min.js"></script>
+        <script src="api/getNote.js"></script>
+
+        <script src="assets/js/app.js"></script>
+
+
+
+    </head>
+    <body class="animated-content" ng-app="EdunGuru" ng-controller="noteCtrl">
+        <div id="load">
+            <p style="text-align: center;margin-top: 250px;"> Your note is being prepared, it might take 5-10 seconds to load the note.</p>
+        </div>
+        <header id="topnav" class="navbar navbar-default navbar-fixed-top" role="banner">
+            <div class="logo-area">
+                <span id="trigger-sidebar" class="toolbar-trigger toolbar-icon-bg">
+                    <a data-toggle="tooltips" data-placement="right" title="Toggle Sidebar">
+                        <span class="icon-bg">
+                            <i class="ti ti-menu"></i>
+                        </span>
+                    </a>
+                </span>
+
+                <a class="navbar-brand" href="#"></a>
+            </div><!-- logo-area -->
+
+            <ul class="nav navbar-nav toolbar pull-right">
+                <li class="toolbar-icon-bg">
+                    <a href="notes.html?chapter={{chapter}}&course={{course}}&courseIndex={{courseIndex}}&chapterIndex={{chapterIndex}}&index={{ topicIndex}}&topic={{topic}}" >&laquo; Back</a>
+                </li>
+            </ul>
+        </header>
+
+        <div id="wrapper">
+            <div id="layout-static">
+                <div class="static-sidebar-wrapper sidebar-default">
+                    <div class="static-sidebar">
+                        <div class="sidebar">
+
+                            <div class="widget stay-on-collapse" id="widget-sidebar">
+                                <nav role="navigation" class="widget-body">
+                                    <ul class="acc-menu">
+                                        <li><a href="index.html"><i class="fa fa-home"></i><span> Home</span></a></li>
+                                        <li id='refresh'><a href="http://www.edunguru.com/account/dashboard"><i class="fa fa-book"></i><span> Take Test</span></a></li>
+                                        <li id='refresh'><a href="#"><i class="fa fa-refresh"></i><span> Refresh</span></a></li>
+                                        <li id='exit'><a href="#"><i class="fa fa-times"></i><span> Exit</span></a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="static-content-wrapper" >
+                    <div class="static-content">
+                        <div class="page-content">
+                            <ol class="breadcrumb">
+
+                                <li class=""><a href="index.html">Home</a></li>
+                                <li class=""><a href="chapters.html?course={{course}}&index={{courseIndex}}">{{course}}</a></li>
+                                <li class=""><a href="topics.html?chapter={{chapter}}&course={{course}}&courseIndex={{courseIndex}}&index={{ chapterIndex}}">{{ chapter}}</a></li>
+                                <li class=""> <a href="notes.html?chapter={{chapter}}&course={{course}}&courseIndex={{courseIndex}}&chapterIndex={{chapterIndex}}&index={{ topicIndex}}&topic={{topic}}" >{{topic}}</a></li>
+                                <li class="active"><a href="#">{{ note}}</a></li>
+
+                            </ol>
+                            <div class="container-fluid">
+
+
+                                <div>	
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <h3 style="margin-left:30px;">{{note}}</h3>					
+                                                </div>
+
+
+                                            </div>
+
+                                            <webview  autosize="on" minwidth="600" minheight="800" ></webview>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div> <!-- .container-fluid -->
+                        </div> <!-- #page-content -->
+                    </div>
+                </div>
+
+                <ng-include src=" 'includes/footer.html' "></ng-include>
+            </div>
+        </div>
+
+
+    </body>
+</html>

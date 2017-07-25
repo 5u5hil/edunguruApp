@@ -55,6 +55,7 @@ cmd.get(javaPath + '/java -cp ' + classPath + ' ed ' + cpath + '/validity.eng ' 
         var validUpto = new Date(validity.validUpto);
         var lastAccessedOn = new Date(validity.lastAccessedOn);
         var today = new Date();
+        today.setHours(0,0,0,0);
         validity.lastAccessedOn = today.toISOString().slice(0, 10).replace(/-/g, "-");
 
         macaddress.one(function (err, mac) {
@@ -83,7 +84,7 @@ cmd.get(javaPath + '/java -cp ' + classPath + ' ed ' + cpath + '/validity.eng ' 
                 if (data.indexOf('success') >= 0) {
                     cmd.get(javaPath + '/java -cp ' + classPath + ' del ' + cpath + '/validity', function (err, data, stderr) {
                         if (loadingDate > today || today > validUpto || today < lastAccessedOn) {
-                            alert("Sorry! The validity of this application is over!");
+                            alert("Sorry! Either the validity of this application is over or you've tampered with the system date!");
                             window.close();
                         }
 
